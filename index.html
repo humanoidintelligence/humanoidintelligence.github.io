@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hi, Humanoid Intelligence!</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/hi_logo.ico">
+
+    <!-- Import Google Fonts to match the screenshot's font style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reset basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000; /* Solid black background */
+            color: #ffffff;           /* Pure white text */
+            font-family: 'Inter', sans-serif; /* Default sans-serif font */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative; /* Used for positioning the footer */
+        }
+
+        /* Main container */
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Main title */
+        h1 {
+            font-family: 'Playfair Display', serif; /* Serif font for the title */
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+        }
+
+        /* Description text container */
+        .description {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.8;
+            letter-spacing: 0.2px;
+            color: #ffffff;
+            margin-bottom: 40px;
+        }
+
+        .desc-line {
+            display: block;
+        }
+
+        /* --- Global link styles (kept consistent) --- */
+        a {
+            color: #ffffff;          /* Default white */
+            text-decoration: none;   /* No underline by default */
+            transition: border-bottom 0.2s ease; /* Smooth transition */
+            border-bottom: 1px solid transparent; /* Reserve space for hover underline */
+        }
+
+        a:hover {
+            border-bottom: 1px solid #ffffff; /* White underline on hover */
+        }
+        /* ------------------------------------------ */
+
+        /* Contact info grid container */
+        .contact-grid {
+            display: inline-grid;
+            grid-template-columns: auto auto; /* Two columns, auto width */
+            column-gap: 35px;       /* Horizontal spacing between columns */
+            row-gap: 12px;          /* Vertical spacing between rows */
+            text-align: left;       /* Left align text to match the start of columns */
+            font-size: 14px;
+        }
+
+        /* Label column */
+        .label {
+            font-weight: 700; /* Bold */
+        }
+
+        /* Content column (email or link) */
+        .content {
+            font-weight: 400;
+        }
+
+        /* Footer copyright information */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 10px;
+            color: #666666; /* Dark gray */
+            font-weight: 400;
+        }
+
+        /* Adaptation for small screens */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            .description {
+                font-size: 13px;
+                line-height: 1.6;
+                margin-bottom: 30px;
+            }
+            .contact-grid {
+                column-gap: 20px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Title -->
+        <h1>Hi, Humanoid Intelligence!</h1>
+        
+        <!-- Description text split into two lines -->
+        <div class="description">
+            <span class="desc-line">We develop and scale cognitive-science inspired humanoid foundation models</span>
+            <span class="desc-line">jointly supported by <a href="https://openmoss.ai" target="_blank">OpenMOSS</a> & <a href="https://www.sii.edu.cn" target="_blank">SII</a> & <a href="https://www.fudan.edu.cn/en" target="_blank">Fudan</a></span>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="contact-grid">
+            <div class="label">GitHub</div>
+            <div class="content">
+                <a href="https://github.com/humanoidintelligence" target="_blank">humanoidintelligence</a>
+            </div>
+            
+            <div class="label">Contact</div>
+            <div class="content">pengli.ds@gmail.com</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2026 Hi. All rights reserved.
+    </div>
+
+</body>
+</html>
