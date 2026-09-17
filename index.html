@@ -8,6 +8,34 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/hi_logo.ico">
 
+    <!-- Resolve the language before first paint so there is no English flash -->
+    <script>
+        (function () {
+            var STORAGE_KEY = 'hi-lang';
+
+            function normalize(value) {
+                return value && value.toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en';
+            }
+
+            function stored() {
+                try {
+                    return localStorage.getItem(STORAGE_KEY);
+                } catch (e) {
+                    return null; // private mode / storage disabled
+                }
+            }
+
+            // Precedence: explicit ?lang= > remembered choice > browser locale
+            var requested = /[?&]lang=([^&]+)/.exec(location.search);
+            var lang = requested
+                ? normalize(decodeURIComponent(requested[1]))
+                : normalize(stored() || navigator.language);
+
+            window.__hiLang = { key: STORAGE_KEY, initial: lang, explicit: !!requested, normalize: normalize };
+            document.documentElement.lang = lang;
+        })();
+    </script>
+
     <!-- Import Google Fonts to match the screenshot's font style -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,6 +123,63 @@
             font-weight: 400;
         }
 
+        /* --- Language switch --- */
+        .lang-switch {
+            position: fixed;
+            top: 24px;
+            right: 28px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            color: #666666;
+        }
+
+        .lang-switch a {
+            color: #666666;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s ease;
+        }
+
+        .lang-switch a:hover {
+            color: #ffffff;
+            border-bottom-color: transparent;
+        }
+
+        .lang-switch a[aria-current="true"] {
+            color: #ffffff;
+        }
+
+        .lang-switch .sep {
+            margin: 0 6px;
+        }
+
+        /* Show only the active language; English is the no-JS default */
+        html[lang="zh"] [data-lang="en"],
+        html:not([lang="zh"]) [data-lang="zh"] {
+            display: none;
+        }
+
+        /* The description wrapper holds block-level .desc-line children */
+        .description > [data-lang] {
+            display: block;
+        }
+
+        /* Chinese typography: CJK glyphs fall back to system fonts,
+           so adjust the stacks and spacing to keep the rhythm even */
+        html[lang="zh"] body {
+            font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+        }
+
+        html[lang="zh"] h1 {
+            font-family: 'Playfair Display', 'Songti SC', 'STSong', 'SimSun', serif;
+            letter-spacing: 1.5px;
+        }
+
+        html[lang="zh"] .description {
+            letter-spacing: 0;
+            line-height: 1.9;
+        }
+        /* ----------------------- */
+
         /* Footer copyright information */
         .footer {
             position: absolute;
@@ -119,19 +204,37 @@
                 column-gap: 20px;
                 font-size: 13px;
             }
+            .lang-switch {
+                top: 16px;
+                right: 16px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- Language switch: real links so ?lang= URLs stay shareable -->
+    <nav class="lang-switch">
+        <a href="?lang=en" data-set-lang="en">EN</a><span class="sep">/</span><a href="?lang=zh" data-set-lang="zh">中文</a>
+    </nav>
+
     <div class="container">
         <!-- Title -->
-        <h1>Hi, Humanoid Intelligence!</h1>
-        
+        <h1>
+            <span data-lang="en">Hi, Humanoid Intelligence!</span>
+            <span data-lang="zh">Hi, 人形智能！</span>
+        </h1>
+
         <!-- Description text split into two lines -->
         <div class="description">
-            <span class="desc-line">We develop and scale cognitive-science inspired humanoid foundation models</span>
-            <span class="desc-line">jointly supported by <a href="https://openmoss.ai" target="_blank">OpenMOSS</a> & <a href="https://www.sii.edu.cn" target="_blank">SII</a> & <a href="https://www.fudan.edu.cn/en" target="_blank">Fudan</a></span>
+            <span data-lang="en">
+                <span class="desc-line">We develop and scale cognitive-science inspired humanoid foundation models and agents</span>
+                <span class="desc-line">jointly supported by <a href="https://openmoss.ai" target="_blank">OpenMOSS</a> & <a href="https://www.sii.edu.cn" target="_blank">SII</a> & <a href="https://www.fudan.edu.cn/en" target="_blank">Fudan</a></span>
+            </span>
+            <span data-lang="zh">
+                <span class="desc-line">我们研发并规模化受认知科学启发的人形机器人基础模型与智能体</span>
+                <span class="desc-line">由 <a href="https://openmoss.ai" target="_blank">OpenMOSS</a> & <a href="https://www.sii.edu.cn" target="_blank">上海创智学院</a> & <a href="https://www.fudan.edu.cn" target="_blank">复旦大学</a> 联合支持</span>
+            </span>
         </div>
 
         <!-- Contact Information -->
@@ -140,16 +243,63 @@
             <div class="content">
                 <a href="https://github.com/humanoidintelligence" target="_blank">humanoidintelligence</a>
             </div>
-            
-            <div class="label">Contact</div>
+
+            <div class="label"><span data-lang="en">Contact</span><span data-lang="zh">联系方式</span></div>
             <div class="content">pengli.ds@gmail.com</div>
         </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        &copy; 2026 Hi. All rights reserved.
+        <span data-lang="en">&copy; 2026 Hi-Tech. All rights reserved.</span>
+        <span data-lang="zh">&copy; 2026 机智科技 保留所有权利。</span>
     </div>
+
+    <script>
+        (function () {
+            var TITLES = {
+                en: 'Humanoid Intelligence',
+                zh: '人形智能'
+            };
+            var boot = window.__hiLang;
+
+            function remember(lang) {
+                try {
+                    localStorage.setItem(boot.key, lang);
+                } catch (e) { /* ignore */ }
+            }
+
+            function apply(lang, syncUrl) {
+                document.documentElement.lang = lang;
+                document.title = TITLES[lang];
+                var links = document.querySelectorAll('[data-set-lang]');
+                for (var i = 0; i < links.length; i++) {
+                    links[i].setAttribute('aria-current', String(links[i].getAttribute('data-set-lang') === lang));
+                }
+                if (syncUrl && window.history && history.replaceState) {
+                    history.replaceState(null, '', lang === 'zh' ? '?lang=zh' : location.pathname);
+                }
+            }
+
+            if (boot.explicit) {
+                remember(boot.initial);
+            }
+            apply(boot.initial, false);
+
+            document.addEventListener('click', function (event) {
+                var target = event.target;
+                var link = target && target.nodeType === 1 ? target.closest('[data-set-lang]') : null;
+                if (!link) {
+                    return;
+                }
+                event.preventDefault();
+                var lang = link.getAttribute('data-set-lang');
+                remember(lang);
+                apply(lang, true);
+            });
+        })();
+    </script>
+
 
 </body>
 </html>
